@@ -3,8 +3,8 @@ policies:
     resource: ec2
     filters:
        - type: offhour
-	 tag: InsertAWSTagHere
-	 offhour: 19
+         tag: InsertAWSTagHere
+         offhour: 19
          default_tz: utc
     actions:
       - stop
@@ -13,8 +13,8 @@ policies:
     resource: ec2
     filters:
       - type: onhour
-	tag: InsertAWSTagHere
- 	onhour: 8
-	default_tz: utc
+        tag: InsertAWSTagHere
+        onhour: 8
+        default_tz: utc
     actions:
       - start

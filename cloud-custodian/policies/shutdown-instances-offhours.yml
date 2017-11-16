@@ -1,0 +1,20 @@
+policies:
+  - name: stop-instances-offhours
+    resource: ec2
+    filters:
+       - type: offhour
+         tag: InsertAWSTagHere
+         offhour: 19
+         default_tz: utc
+    actions:
+      - stop
+
+  - name: start-instances-onhours
+    resource: ec2
+    filters:
+      - type: onhour
+        tag: InsertAWSTagHere
+        onhour: 8
+        default_tz: utc
+    actions:
+      - start

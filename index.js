@@ -38,9 +38,8 @@ horseman
   .userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0")
   .viewport(1280, 1024)
   .open("https://www.photobox.co.uk/")
-  .wait(2000)
   .click('#Nav > ul > li > a:eq('+categoryNumber + ')')
-  .waitForNextPage({timeout: 40000})
+  .waitForNextPage()
   .then(scrape)
   .finally(function() {
     console.log(links);

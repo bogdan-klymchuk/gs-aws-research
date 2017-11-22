@@ -1,0 +1,27 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+      KeyName: ansible-ssh-key
+      InstanceType: t2.micro
+      SSHLocation: 0.0.0.0/0
+
+  tasks:
+      - name: Run Ansible host cloudformation stack
+        cloudformation:
+            stack_name: AnsibleHostStack
+            region: eu-central-1
+            state: present
+            template: AnsibleHostStack.template
+            template_parameters:
+            KeyName: ansible-ssh-key
+            InstanceType: t2.micro
+            SSHLocation: 0.0.0.0/0
+            tags:
+                name: ec2-eu-central-1a-p-ansible
+                env: test
+                stack: ansible
+        register: ansiblehost_stack
+      - debug: msg=""
+      - debug: msg=""

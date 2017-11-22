@@ -1,0 +1,82 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  AWS CloudFormation template AnsibleHostStack: Create EC2 instance running Ubuntu 17.04 Linux installed with Ansible for running Ansible playbooks that provision and configure the AWS environment.
+Parameters:
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+    Type: 'AWS::EC2::KeyPair::KeyName'
+    Default: ansible-ssh-key
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.nano
+      - t2.micro
+      - t2.small
+      - t2.medium
+    ConstraintDescription: must be a valid EC2 instance type.
+  SSHLocation:
+    Description: The IP address range that can be used to SSH to the EC2 instances
+    Type: String
+    MinLength: '9'
+    MaxLength: '18'
+    Default: 0.0.0.0/0
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
+    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+Resources:
+  AnsibleInstance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: "ami-b52babda"
+      AvailabilityZone: eu-central-1a
+      InstanceType: t2.micro
+      KeyName: ansible-ssh-key
+      SecurityGroups:
+        - Ref: AnsibleSecurityGroup
+      Tags:
+          - Key: "Name"
+            Value: "ec2-eu-central-1a-p-ansible"
+          - Key: "Stack"
+            Value: "Ansible"
+          - Key: "Environment"
+            Value: "Test"
+  AnsibleSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupName: security-group-eu-central-1-p-ansible-ssh
+      GroupDescription: Enable SSH access via port 22
+      Tags:
+          - Key: "Name"
+            Value: "security-group-eu-central-1-p-ansible-ssh"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp:
+            Ref: SSHLocation
+
+Outputs:
+  InstanceId:
+    Description: InstanceId of the newly created EC2 instance
+    Value:
+      Ref: AnsibleInstance
+  AZ:
+    Description: Availability Zone of the newly created EC2 instance
+    Value:
+      'Fn::GetAtt':
+        - AnsibleInstance
+        - AvailabilityZone
+  PublicDNS:
+    Description: Public DNSName of the newly created EC2 instance
+    Value:
+      'Fn::GetAtt':
+        - AnsibleInstance
+        - PublicDnsName
+  PublicIP:
+    Description: Public IP address of the newly created EC2 instance
+    Value:
+      'Fn::GetAtt':
+        - AnsibleInstance
+        - PublicIp

@@ -1,0 +1,5 @@
+# This playbook provisions, configures and deploys compomnents in 
+# the GS AWS Research Cloud Infrastructure
+
+#  Run Amazon Cloudformation stacks
+- include: site_cloudformation.yml
